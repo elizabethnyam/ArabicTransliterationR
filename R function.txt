@@ -1,0 +1,43 @@
+# R function to automatically transliterate Arabic to IPA
+
+# Install and load the required package(s)
+# install package "stringr"
+install.packages(stringr)
+# load package "stringr"'
+library (stringr)
+
+
+# Run the following R function
+arabic_to_ipa <- function(text)
+  {
+  # Create a mapping between Arabic vowel diacritics and IPA symbols
+  arabic_vowels <- c("َ" = "\u{0251}",# fatha
+                     "ُ" = "\u{028A}",#damma
+                     "ِ"= "\u{026A}", #kassra
+                     "ً"=  "an", #tanween fateh
+                     "ٌ"="un", #tanween damm
+                    "ٍ"=  "in") #tanween kaser
+
+                       
+  # Create a mapping between Arabic consonants and IPA symbols
+  arabic_consonants <- c("ال"= "ʔәl", "ء" = "ʔ", "آ" = "ʔaː", "أ" = "ʔ", "ؤ" = "w", "إ" = "ʔ", "ى"="a:", "ا" = "aː","ب"="b", "ت"="t", "ث"="θ", "ج"="dʒ", "ح"="ħ", "خ"="x", "د"="d", "ذ"="ð", "ر"="r", "ز"="z", "س"="s", "ش"="ʃ", "ص"="sˤ", "ض"="dˤ", "ط"="tˤ", "ظ"="ðˤ", "ع"="ʕ", "غ"="ɣ", "ف"="f", "ق"="q", "ك"="k", "ل"="l", "م"="m", "ن"="n", "ه"="h", "ة"="t", "و"="w", "ي"="j")
+  
+      # Transliterate Arabic letters with their respective IPA symbols
+  for (c in names(arabic_consonants)) {
+    text <- str_replace_all(text, c, arabic_consonants[c])
+  } 
+  
+    # Transliterate Arabic vowels with their respective IPA symbols
+  for (v in names(arabic_vowels)) {
+        text <- str_replace_all(text, v, arabic_vowels [v]) }
+ 
+  # Remove the other diacritics: sukoon and shadda from the final output 
+  cleaned_text <- gsub("[ًٌٍَُِّْ]", "", text, perl=TRUE)
+    return(cleaned_text)} 
+
+text_test <- c( "أضيفي/أضف هنا أي جملة فصيحة بتشكيل أو بدون",
+               "بالإمكان اضافة جُمل اضافية هنا كذلك",
+            "إذا أردت اضافة المزيد من الجمل، قم بفتح علامة تنصيص جديدة",
+            " آخر جملة مُضافة لاتُلحق بعلامة الفاصلة")
+
+arabic_to_ipa(text_test)
